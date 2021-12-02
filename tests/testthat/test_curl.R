@@ -50,3 +50,24 @@ test_that("Match data returns OK", {
         all(cols %in% colnames(res))
     )
 })
+
+test_that("Service record returns OK", {
+    res = get_player_service_record('Corvus0805', handle)
+    cols = c("data.summary.kills", "data.summary.deaths", "data.summary.assists",
+             "data.summary.betrayals", "data.summary.suicides", "data.summary.vehicles.destroys",
+             "data.summary.vehicles.hijacks", "data.summary.medals", "data.damage.taken",
+             "data.damage.dealt", "data.damage.average", "data.shots.fired",
+             "data.shots.landed", "data.shots.missed", "data.shots.accuracy",
+             "data.breakdowns.kills.melee", "data.breakdowns.kills.grenades",
+             "data.breakdowns.kills.headshots", "data.breakdowns.kills.power_weapons",
+             "data.breakdowns.assists.emp", "data.breakdowns.assists.driver",
+             "data.breakdowns.assists.callouts", "data.breakdowns.matches.wins",
+             "data.breakdowns.matches.losses", "data.breakdowns.matches.left",
+             "data.breakdowns.matches.draws", "data.kda", "data.kdr", "data.total_score",
+             "data.matches_played", "data.time_played.seconds", "data.time_played.human",
+             "data.win_rate", "additional.gamertag", "additional.enforcement"
+    )
+    expect_true(
+        all(cols %in% colnames(res))
+    )
+})

@@ -79,6 +79,7 @@ api_player_csr = function(gamertag, season, input = c('mnk', 'controller', 'cros
 #' @importFrom jsonlite fromJSON
 #' @importFrom purrr map
 #' @importFrom tibble as_tibble
+#' @importFrom futile.logger
 get_player_match_data = function(gamertag, handle, one = FALSE) {
     message("Obtaining data for ", gamertag)
     page = 1
@@ -102,6 +103,9 @@ get_player_match_data = function(gamertag, handle, one = FALSE) {
 }
 
 #' Get CSR data
+#'
+#' Automatically loops through valid input and queue parameters, aggregating the
+#' results together in a data frame.
 #'
 #' @param gamertag Character value for the gamertag to view.
 #' @param season Numeric value for the season to view.
@@ -128,6 +132,14 @@ get_player_csr = function(gamertag, season, handle) {
     }
 
     return(out)
+}
+
+get_player_service_record = function(gamertag, handle) {
+    message("Obtaining data for ", gamertag)
+    res = curl::curl_fetch_memory(url = api_player_service_record(gamertag), handle = handle)
+    data = jsonlite::fromJSON(rawToChar(res$content), simplifyDataFrame = TRUE)
+    data_df = data %>% unnest_df()
+    return(data_df)
 }
 
 
