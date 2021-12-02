@@ -4,7 +4,10 @@
 #'
 #' @param gamertag Character value for the gamertag to view.
 #' @importFrom glue glue
-api_service_record = function(gamertag) {
+api_player_service_record = function(gamertag) {
+    stopifnot(
+        is.character(gamertag)
+    )
     gamertag = URLencode(gamertag)
     hapi = glue::glue('https://cryptum.halodotapi.com/games/hi/stats/players/{gamertag}/service-record/global')
     return(hapi)
@@ -19,6 +22,13 @@ api_service_record = function(gamertag) {
 #' and you will want to use the next page number that is returned in the response.
 #' @importFrom glue glue
 api_player_matches = function(gamertag, page) {
+    page = as.integer(page)
+    stopifnot(
+        length(gamertag) == 1,
+        length(page) == 1,
+        is.character(gamertag),
+        ! is.na(page)
+    )
     gamertag = URLencode(gamertag)
     hapi = glue::glue('https://cryptum.halodotapi.com/games/hi/stats/players/{gamertag}/matches?page={page}')
     return(hapi)
@@ -36,7 +46,18 @@ api_player_matches = function(gamertag, page) {
 #' @param input Character value, one of 'mnk', 'controller', or 'crossplay' for the specific input type.
 #' @param queue Character value, one of 'open', or 'solo-duo' for the queuing method.
 #' @importFrom glue glue
-api_player_csr = function(gamertag, season, input = c('mnk', 'controller', 'crossplay'), queue) {
+api_player_csr = function(gamertag, season, input = c('mnk', 'controller', 'crossplay'), queue = c('solo-duo', 'open')) {
+    season = as.integer(season)
+    stopifnot(
+        length(gamertag) == 1,
+        length(season) == 1,
+        length(input) == 1,
+        length(queue) == 1,
+        is.character(gamertag),
+        is.character(input),
+        is.character(queue),
+        ! is.na(season)
+    )
     gamertag = URLencode(gamertag)
     hapi = glue::glue('https://cryptum.halodotapi.com/games/hi/stats/players/{gamertag}/csr?season={season}&input={input}&queue={queue}')
     return(hapi)
@@ -58,7 +79,7 @@ api_player_csr = function(gamertag, season, input = c('mnk', 'controller', 'cros
 #' @importFrom jsonlite fromJSON
 #' @importFrom purrr map
 #' @importFrom tibble as_tibble
-get_match_data = function(gamertag, handle, one = FALSE) {
+get_player_match_data = function(gamertag, handle, one = FALSE) {
     message("Obtaining data for ", gamertag)
     page = 1
     data_list = list()
@@ -85,6 +106,9 @@ get_match_data = function(gamertag, handle, one = FALSE) {
 #' @param gamertag Character value for the gamertag to view.
 #' @param season Numeric value for the season to view.
 #' @param handle `curl` handle to use, created with curl::new_handle. Used to supply authentication token.
+#' @importFrom curl curl_fetch_memory
+#' @importFrom jsonlite fromJSON
+#' @importFrom dplyr `%>%` bind_rows
 get_player_csr = function(gamertag, season, handle) {
     message("Obtaining data for ", gamertag)
     vals = data.frame(
@@ -105,6 +129,8 @@ get_player_csr = function(gamertag, season, handle) {
 
     return(out)
 }
+
+
 
 
 save_one_player_data = function(handle, con, table_name, gamertag, one = FALSE) {
@@ -136,17 +162,5 @@ pull_player_data = function(con, table_name, gamertag) {
     d = dbGetQuery(con, glue::glue("select * from {table_name} where player in ({gamertag})"))
     d %>%
         mutate(played_at = as_datetime(played_at))
-}
-
-create_handle = function(api_txt_file) {
-    authkey = readLines(api_txt_file)
-    handle = curl::new_handle(verbose = TRUE)
-    handle_setheaders(handle,
-                      'Authorization' = glue::glue("Cryptum-Token {authkey}"),
-                      'Content-Type' = 'application/json',
-                      'Cryptum-API-Version' = '2.3-alpha'
-    )
-    return(handle)
-
 }
 
