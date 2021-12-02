@@ -8,7 +8,7 @@ api_player_csr(
   gamertag,
   season,
   input = c("mnk", "controller", "crossplay"),
-  queue
+  queue = c("solo-duo", "open")
 )
 }
 \arguments{
