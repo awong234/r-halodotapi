@@ -1,0 +1,17 @@
+Package: halodotapi
+Title: R Interface to HaloDotAPI
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Alec",
+           family = "Wong",
+           role = c("aut", "cre"),
+           email = "alecwong@live.com")
+Description: Calls endpoints from HaloDotAPI, formats incoming data, and handles curl operations.
+License: MIT
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
