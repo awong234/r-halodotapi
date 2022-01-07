@@ -14,5 +14,6 @@ get_player_csr(gamertag, season, handle)
 \item{handle}{\code{curl} handle to use, created with curl::new_handle. Used to supply authentication token.}
 }
 \description{
-Get CSR data
+Automatically loops through valid input and queue parameters, aggregating the
+results together in a data frame.
 }

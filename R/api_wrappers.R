@@ -20,18 +20,23 @@ api_player_service_record = function(gamertag) {
 #' @param gamertag Character value for the gamertag to view.
 #' @param page Numeric value for the page to view. The data returned is paginated,
 #' and you will want to use the next page number that is returned in the response.
-#' @importFrom glue glue
-api_player_matches = function(gamertag, page) {
-    page = as.integer(page)
+#' @importFrom httr2 request req_headers req_url_query req_perform resp_body_json
+api_player_list_matches = function(gamertag, count = 0, offset = 0, mode = NULL) {
     stopifnot(
-        length(gamertag) == 1,
-        length(page) == 1,
+        length(gamertag) == 1L,
         is.character(gamertag),
-        ! is.na(page)
+        is.numeric(count),
+        is.numeric(offset),
+        mode %in% c("matchmade", "custom")
     )
     gamertag = URLencode(gamertag)
-    hapi = glue::glue('https://cryptum.halodotapi.com/games/hi/stats/players/{gamertag}/matches?page={page}')
-    return(hapi)
+    req = request("https://halo.api.stdlib.com/infinite@0.3.3/stats/matches/list/")
+    req = req_headers(req, "Authorization" = sprintf("Bearer %s", Sys.getenv("AUTOCODE_API_KEY")))
+    req = req_url_query(req, gamertag = gamertag, count = count, offset = offset, mode = mode)
+    browser()
+    resp = req_perform(req)
+    out = resp_body_json(resp, simplifyDataFrame = TRUE)
+    return(out)
 }
 
 #' CSR API URL
@@ -79,7 +84,6 @@ api_player_csr = function(gamertag, season, input = c('mnk', 'controller', 'cros
 #' @importFrom jsonlite fromJSON
 #' @importFrom purrr map
 #' @importFrom tibble as_tibble
-#' @importFrom futile.logger
 get_player_match_data = function(gamertag, handle, one = FALSE) {
     message("Obtaining data for ", gamertag)
     page = 1
