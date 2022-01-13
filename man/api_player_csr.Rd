@@ -4,12 +4,7 @@
 \alias{api_player_csr}
 \title{CSR API URL}
 \usage{
-api_player_csr(
-  gamertag,
-  season,
-  input = c("mnk", "controller", "crossplay"),
-  queue = c("solo-duo", "open")
-)
+api_player_csr(gamertag, season)
 }
 \arguments{
 \item{gamertag}{Character value for the gamertag to view.}

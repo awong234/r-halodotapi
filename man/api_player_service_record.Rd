@@ -4,7 +4,7 @@
 \alias{api_player_service_record}
 \title{Service Record API URL}
 \usage{
-api_player_service_record(gamertag)
+api_player_service_record(gamertag, type = c("multiplayer", "campaign"))
 }
 \arguments{
 \item{gamertag}{Character value for the gamertag to view.}

@@ -4,7 +4,7 @@
 \alias{get_player_csr}
 \title{Get CSR data}
 \usage{
-get_player_csr(gamertag, season, handle)
+get_player_csr(gamertag, season)
 }
 \arguments{
 \item{gamertag}{Character value for the gamertag to view.}

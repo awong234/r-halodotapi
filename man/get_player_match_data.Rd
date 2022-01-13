@@ -4,17 +4,26 @@
 \alias{get_player_match_data}
 \title{Get match data}
 \usage{
-get_player_match_data(gamertag, handle, one = FALSE)
+get_player_match_data(
+  gamertag,
+  count = NULL,
+  offset = NULL,
+  mode = NULL,
+  one = FALSE
+)
 }
 \arguments{
 \item{gamertag}{Character value for the gamertag to view.}
 
-\item{handle}{\code{curl} handle to use, created with curl::new_handle. Used to supply authentication token.}
-
-\item{one}{Boolean, if TRUE returns only the first page. Useful if}
+\item{one}{Boolean, if TRUE returns only the first page. Useful for testing.}
+}
+\value{
+A list of two elements, a data frame with medals, and a data frame with statistics.
 }
 \description{
-Runs through the pagination for the match history for the supplied gamertag.
+Runs through match history for the supplied gamertag.
+}
+\details{
 Each response is returned as JSON, which is formatted as a data.frame for the
 user. The response contains a field for the next page number, which is used
 until it returns \code{NULL}.
