@@ -1,0 +1,92 @@
+---
+title: "Querying from the Halodotapi endpoints"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{querying-api}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+suppressMessages({
+    suppressWarnings({
+        library(halodotapi)
+        library(dplyr)
+    })
+})
+```
+
+# Developing the API endpoints
+
+At current there are four API endpoints related to player performance and match session information:
+
+* `api_match_details()`
+* `api_player_csr()`
+* `api_player_match_history()`
+* `api_player_service_record()`
+
+These functions develop the URL's required to perform queries. These are
+generally not intended to be used directly, but can be used in the event the
+user wishes to handle the responses themselves.
+
+So long as a valid API token is present in the R environment (either by
+configuring the `.Renviron` file, or by setting `Sys.setenv()`), the api
+functions will bundle the authentication header with the URL. The environment
+variable is named `AUTOCODE_API_KEY`.
+
+If you don't have one, you can obtain one by navigating to https://autocode.com/
+and registering for an account. Go to your Profile > Account > Identity Tokens >
+General Use Identity Tokens and click "Create General Use Identity"
+
+## Example endpoint
+
+The output from the `api_` functions are a httr2_request object. Passing these
+objects to `httr2::req_perform` will obtain the response from the server. The
+body is typically extracted in this package using `httr2::resp_body_json`, but
+other functions such as `resp_body_string`, or similar could be used.
+
+```{r}
+api_player_match_history("Corvus0805", count = 25L, offset = 0L, mode = 'matchmade')
+```
+
+# Querying from the API
+
+The API URL generation, request, and responses are handled for you by the `get_`
+family of functions. There is one for each endpoint, and these will be the
+workhorses of the package typically used by users:
+
+* `get_match_details()`
+* `get_player_csr()`
+* `get_player_match_history()`
+* `get_player_service_record()`
+
+## Example: obtaining the player service record
+
+As an example, we'll pull my service record. There are two items; medals, and
+statistics.
+
+```{r}
+service_record = get_player_service_record("Corvus0805", type = "multiplayer", filter = "all")
+```
+
+The statistics is a data frame with a single record, with all-time summary statistics on my player performance.
+
+```{r}
+str(service_record$stats)
+```
+
+The medals item is a data frame with several records, one for each unique medal earned, and frequencies of said medals.
+
+```{r}
+head(arrange(service_record$medals, desc(count)))
+```
+
+The result is a data frame of one record, displaying all-time summary statistics
+for the gamertag.

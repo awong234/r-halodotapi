@@ -6,6 +6,13 @@
 \usage{
 add_auth_header(req)
 }
+\arguments{
+\item{req}{An http request, derived from \code{httr2::request}.}
+}
+\value{
+A modified request, with the authentication token embedded in the request header.
+}
 \description{
-Add header to request
+The authorization seeks an environment variable called \code{AUTOCODE_API_KEY} for
+the authentication token.
 }
