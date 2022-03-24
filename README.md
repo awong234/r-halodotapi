@@ -17,9 +17,9 @@ and registering for an account. Go to your Profile \> Account \>
 Identity Tokens \> General Use Identity Tokens and click “Create General
 Use Identity”
 
-The default Halodotapi version currently defaults to
-`r halodotapi:::pkgenv$latest_supported_version`. You may set other
-versions to be used – noting that they may not be supported – using:
+The default Halodotapi version currently defaults to 0.3.9. You may set
+other versions to be used – noting that they may not be supported –
+using:
 
 ``` r
 options(halodotapi.default_version = 'x.x.x')
