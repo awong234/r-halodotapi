@@ -1,5 +1,7 @@
 
-# Halodotapi for R
+# Halodotapi for R (deprecated)
+
+Halodotapi has moved to Autocode, and as such this project is retired.
 
 *Wrapping the Halodotapi into R functions*
 
@@ -17,7 +19,7 @@ and registering for an account. Go to your Profile \> Account \>
 Identity Tokens \> General Use Identity Tokens and click “Create General
 Use Identity”
 
-The default Halodotapi version currently defaults to 0.3.9. You may set
+The default Halodotapi version currently defaults to 0.3.9 (now deprecated). You may set
 other versions to be used – noting that they may not be supported –
 using:
 
